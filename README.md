@@ -14,6 +14,20 @@ The tool is developed using Python and pandas as a practical exercise in data pr
 2. Python package: `pandas`.
 3. Input data must be provided as a pandas DataFrame.
 
+## Installation
+
+Clone this repository:
+
+    git clone https://github.com/bgoh29/pandas-data-cleaning-tool.git
+
+Navigate to the project directory:
+
+    cd pandas-data-cleaning-tool
+
+Install the required packages:
+
+    python -m pip install -r requirements.txt
+
 ## Features
 
 The tool provides the following data-cleaning capabilities:
@@ -93,6 +107,27 @@ cleaned_df = clean_data(
 
 print(cleaned_df)
 ```
+## Testing
+
+The project uses pytest for automated testing.
+
+To run the tests:
+
+    python -m pytest -v
+
+The tests cover:
+- Original DataFrame numbers remain unchanged.
+- Original DataFrame texts remain unchanged.
+- Missing numeric values are replaced correctly.
+- Negative numbers are converted when enabled.
+- Missing text values are replaced.
+- Duplicate rows are removed.
+- missing numbers with interpolation.
+- missing values with most frequently used number.
+- missing values with median.
+- missing value with next valid number.
+- missing value with previous valid number. 
+- Invalid options are handled.
 
 ## Important Notes
 
