@@ -106,3 +106,4 @@ print(cleaned_df)
 ## Project Status
 
 This is an ongoing learning project. Further improvements may include more detailed cleaning reports, configurable cleaning methods for individual columns, and additional data-validation capabilities.
+# pandas-data-cleaning-tool
