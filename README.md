@@ -62,7 +62,7 @@ clean_data(
 |---|---|---|
 | `df` | The pandas DataFrame to be cleaned. | Required |
 | `filling_missing_numbers` | Enables or disables replacement of missing numeric values. | `True` |
-| `convert_negatives` | Converts negative numeric values to positive values. | `False` |
+| `convert_negatives` | Converts negative numeric values to absolute values. | `False` |
 | `fill_missing_text` | Enables or disables replacement of missing text values. | `True` |
 | `replace_text` | The replacement value for missing text. Can be customised by the user. | `'TBD'` |
 | `remove_duplicates` | Enables or disables removal of duplicate rows. | `True` |

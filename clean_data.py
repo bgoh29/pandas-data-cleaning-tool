@@ -1,4 +1,14 @@
 import pandas as pd 
+"""
+Program: clean_data.py
+Description: A simple pandas DataFrame cleaning utility.
+Author: Ben Goh
+Version: 1.0
+
+Purpose:
+    Handles missing values, negative numbers and duplicate rows.
+"""
+
 
 def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fill_missing_text = True, replace_text = 'TBD', remove_duplicates = True, option = 3 ):
 
