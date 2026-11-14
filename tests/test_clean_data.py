@@ -36,7 +36,7 @@ def test_original_dataframe_text_unchanged():
 
     result = clean_data(original,fill_missing_text=False)
 
-    pd.testing.assert_frame_equal(result, expected)
+    pd.testing.assert_frame_equal(original, expected)
 
 
 # test 3
