@@ -1,4 +1,4 @@
-import pandas as pd 
+
 """
 Program: clean_data.py
 Description: A simple pandas DataFrame cleaning utility.
@@ -34,7 +34,7 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
     columns_with_empty_values = []
     changed_columns = []
 
-    # scanning for empty coumns
+    # scanning for empty columns
     for col in df_copy.columns:
         if df_copy[col].isna().all():
             columns_with_empty_values.append(col)
@@ -99,9 +99,9 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
                     df_copy[col] = df_copy[col].ffill().bfill()
                     missing_after = df_copy[col].isna().sum()
                     total_cells_updated += missing_before - missing_after
-                
+                    changed_columns.append(col)
                               
-            # updating negative numbers to postivies
+            # updating negative numbers to positivies
             if df_copy[col].lt(0).any() and convert_negatives:
                 changed_columns.append(col)
                 neg = df_copy[col].lt(0)
