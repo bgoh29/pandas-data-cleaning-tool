@@ -1,10 +1,3 @@
-import sys
-from pathlib import Path
-
-# Add the project root directory to Python's search path
-project_root = Path.cwd().parent
-sys.path.insert(0, str(project_root))
-
 # Import the cleaning function
 from clean_data import clean_data
 import pandas as pd
@@ -133,8 +126,6 @@ def test_duplicate_rows_removed_disabled():
     })
 
     pd.testing.assert_frame_equal(result, expected)
-
-
 
 
 # test 9
