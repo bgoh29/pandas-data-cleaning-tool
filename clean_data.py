@@ -13,7 +13,7 @@ Purpose:
 def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fill_missing_text = True, replace_text = 'TBD', remove_duplicates = True, option = 3 ):
 
     # option 1 : replaces the missing number with interpolation 
-    # option 2 : replaces the missing number with most fequently used number
+    # option 2 : replaces the missing number with most frequently used number
     # option 3 : replaces the missing number with the mean 
     # option 4: replaces missing number with the median
     # option 5: replaces missing number with the next number 
@@ -50,7 +50,7 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
             # replace missing number with the differences between previous and after numbers
             if df_copy[col].isna().any() and filling_missing_numbers:
                 mnu = df_copy[col].isna()
-                changed_columns.append(col)
+               
                             
                 # Estimate missing values using interpolation
                 if option == 1 : 
@@ -58,9 +58,9 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
                     df_copy[col] = df_copy[col].interpolate(limit_direction="both")
                     missing_after = df_copy[col].isna().sum()
                     total_cells_updated += missing_before -  missing_after
+                    changed_columns.append(col)
                     
-                    
-                # replace missing number with most requent used
+                # replace missing number with most frequently used
                 elif option == 2:
                     mode_values = df_copy[col].mode()
                     if not mode_values.empty:
@@ -68,6 +68,7 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
                         df_copy[col] = df_copy[col].fillna(mode_values.iloc[0])
                         missing_after = df_copy[col].isna().sum()
                         total_cells_updated += missing_before - missing_after
+                        changed_columns.append(col)
                     
                 # replace missing number with mean
                 elif option == 3: 
@@ -75,7 +76,7 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
                     df_copy.loc[mnu,col] = df_copy[col].mean()
                     missing_after = df_copy[col].isna().sum()
                     total_cells_updated += missing_before - missing_after
-                    
+                    changed_columns.append(col)
     
                 # replace missing number with the median     
                 elif option == 4: 
@@ -83,7 +84,7 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
                     df_copy.loc[mnu, col] = df_copy[col].median()
                     missing_after = df_copy[col].isna().sum()
                     total_cells_updated += missing_before - missing_after
-                    
+                    changed_columns.append(col)
                 
                 # replace missing number with next number
                 elif option == 5: 
@@ -91,7 +92,7 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
                     df_copy[col] = df_copy[col].bfill().ffill()
                     missing_after = df_copy[col].isna().sum()
                     total_cells_updated += missing_before - missing_after
-                
+                    changed_columns.append(col)
                 # replace missing number with the previous number
                 elif option == 6:
                     missing_before = df_copy[col].isna().sum()
@@ -110,7 +111,7 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
                 total_cells_updated += negative_before - negative_after
             
     
-    #scan text columns for missing values update them as unknows       
+    #scan text columns for missing values update them as set by the user in the configuration parameter      
     tc = df_copy.select_dtypes(include=['object', 'string']).columns
     for col in tc: 
         if not(df_copy[col].isna().all()): 
