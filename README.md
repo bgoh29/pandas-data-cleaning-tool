@@ -124,7 +124,7 @@ To run the tests from the project root directory:
 python -m pytest -v
 ```
 
-**Test coverage (17 tests):**
+**Test coverage (18 tests):**
 
 ### Data integrity
 - Original DataFrame numeric values remain unchanged.
