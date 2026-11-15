@@ -142,6 +142,7 @@ python -m pytest -v
 
 ### Text data cleaning
 - Missing text values are replaced with the specified replacement value.
+- Missing text values are replaced with the specified replacement value disabled. 
 
 ### Duplicate handling
 - Duplicate rows are removed when enabled.
@@ -153,7 +154,7 @@ python -m pytest -v
 - Invalid numeric replacement options are handled.
 - Options below the supported range are handled.
 
-**Latest test result: 17 passed.**
+**Latest test result: 18 passed.**
 
 ## Important Notes
 
