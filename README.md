@@ -4,29 +4,35 @@
 
 Raw data is rarely perfect. Before using it for data analysis or machine learning, it is often necessary to perform data preprocessing and cleaning.
 
-This project provides a simple Python tool to assist with some common data-cleaning tasks, including handling missing values, converting negative numbers to positive values, identifying empty columns, and removing duplicate rows.
+This project provides a simple Python tool to assist with common data-cleaning tasks, including handling missing values, converting negative numbers to positive values, identifying empty columns, and removing duplicate rows.
 
 The tool is developed using Python and pandas as a practical exercise in data preprocessing and data quality management.
 
 ## Requirements
 
 1. Python 3 installed.
-2. Python package: `pandas`.
+2. Python packages: `pandas` and `pytest`.
 3. Input data must be provided as a pandas DataFrame.
 
 ## Installation
 
 Clone this repository:
 
-    git clone https://github.com/bgoh29/pandas-data-cleaning-tool.git
+```bash
+git clone https://github.com/bgoh29/pandas-data-cleaning-tool.git
+```
 
 Navigate to the project directory:
 
-    cd pandas-data-cleaning-tool
+```bash
+cd pandas-data-cleaning-tool
+```
 
 Install the required packages:
 
-    python -m pip install -r requirements.txt
+```bash
+python -m pip install -r requirements.txt
+```
 
 ## Features
 
@@ -36,7 +42,7 @@ The tool provides the following data-cleaning capabilities:
 2. **Replace missing text values** – Replaces missing text values with a generic value specified by the user.
 3. **Convert negative numbers to positive values** – Converts negative numeric values to their absolute values.
 4. **Identify empty columns** – Reports columns that contain no values.
-5. **Remove duplicate rows** – Identifies and removes duplicated rows, retaining the first occurrence.
+5. **Remove duplicate rows** – Identifies and removes duplicate rows, retaining the first occurrence.
 
 The function also displays a summary of the cleaning operations performed, including the number of numeric and text cells updated, duplicate rows removed, and columns identified as empty or changed.
 
@@ -107,27 +113,47 @@ cleaned_df = clean_data(
 
 print(cleaned_df)
 ```
+
 ## Testing
 
-The project uses pytest for automated testing.
+The project uses `pytest` for automated testing.
 
-To run the tests:
+To run the tests from the project root directory:
 
-    python -m pytest -v
+```bash
+python -m pytest -v
+```
 
-The tests cover:
-- Original DataFrame numbers remain unchanged.
-- Original DataFrame texts remain unchanged.
-- Missing numeric values are replaced correctly.
-- Negative numbers are converted when enabled.
-- Missing text values are replaced.
-- Duplicate rows are removed.
-- missing numbers with interpolation.
-- missing values with most frequently used number.
-- missing values with median.
-- missing value with next valid number.
-- missing value with previous valid number. 
-- Invalid options are handled.
+**Test coverage (17 tests):**
+
+### Data integrity
+- Original DataFrame numeric values remain unchanged.
+- Original DataFrame text values remain unchanged.
+
+### Numeric data cleaning
+- Missing numeric values are replaced with the mean.
+- Negative numbers are converted to positive values when enabled.
+- Negative-number conversion remains disabled when the option is turned off.
+- Missing numeric values are replaced using interpolation.
+- Missing numeric values are replaced using the mode (most frequently occurring value).
+- Missing numeric values are replaced using the median.
+- Missing numeric values are replaced using the next valid value.
+- Missing numeric values are replaced using the previous valid value.
+
+### Text data cleaning
+- Missing text values are replaced with the specified replacement value.
+
+### Duplicate handling
+- Duplicate rows are removed when enabled.
+- Duplicate rows are retained when removal is disabled.
+- Duplicate rows created after replacing missing values are also removed.
+
+### Empty columns and validation
+- Columns containing only missing values remain unchanged.
+- Invalid numeric replacement options are handled.
+- Options below the supported range are handled.
+
+**Latest test result: 17 passed.**
 
 ## Important Notes
 
