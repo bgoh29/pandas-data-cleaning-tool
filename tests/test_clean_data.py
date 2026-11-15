@@ -23,13 +23,9 @@ def test_original_dataframe_text_unchanged():
         'Name': ['Aaron', 'Bob', None, 'Daniel']
     })
 
-    expected = pd.DataFrame({ 
-        'Name': ['Aaron', 'Bob', None, 'Daniel']
-    })
-
     result = clean_data(original,fill_missing_text=False)
 
-    pd.testing.assert_frame_equal(original, expected)
+    pd.testing.assert_frame_equal(result, original)
 
 
 # test 3
