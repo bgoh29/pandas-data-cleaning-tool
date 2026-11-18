@@ -1,9 +1,11 @@
+from pathlib import Path
+import pandas as pd
 
 """
 Program: clean_data.py
 Description: A simple pandas DataFrame cleaning utility.
 Author: Ben Goh
-Version: 1.0
+Version: 1.1
 
 Purpose:
     Handles missing values, negative numbers and duplicate rows.
@@ -19,14 +21,44 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
     # option 5: replaces missing number with the next number 
     # option 6: replaces missing number withthe  previous number
 
+    processingfile = False
+    input_path = None
+
+    if isinstance(df, pd.DataFrame) :
+         #original dataframe is copied to a new dataframe to avoid changing the original dataframe
+         # origianl design
+        df_copy = df.copy()
+        print("Input is a DataFrame. Proceeding with cleaning.")
+        print(type(df_copy))
+
+    elif isinstance(df, (str, Path)):
+        # check if the file is a CSV
+        input_path = Path(df)
+        if input_path.suffix.lower() != ".csv":
+            print("Error: File must be a CSV.")
+            return None
+        else:
+            try:
+                # read the CSV file into a DataFrame
+                df_copy = pd.read_csv(input_path)
+                # set a flag to indicate that we are processing a file
+                processingfile = True
+
+            except FileNotFoundError:
+                print("Error: File not found.")
+                return None
+
+            except Exception as e:
+                print(f"Error reading CSV file: {e}")
+                return None
+
+
     # print error if option is not 1 to 6
     if option not in range(1, 7):
         print("Error: Option must be between 1 and 6.")
         return None
     
-    # make a copy
-    df_copy = df.copy()
-    
+
     # records of changes
     total_cells_updated = 0 
     duplicate_rows = 0  
@@ -134,5 +166,16 @@ def clean_data(df, filling_missing_numbers = True, convert_negatives = False, fi
     print('The duplicated rows have been removed: ', duplicate_rows)
     print('Found empty columns:', columns_with_empty_values)
     print('Columns that have changed during data cleaning: ', list(dict.fromkeys(changed_columns)))
-    
+
+    # save the cleaned data to a new CSV file if the input was a file path
+    if processingfile == True:
+        output_file = input_path.with_name(input_path.stem + "_cleaned.csv")
+        try:
+            df_copy.to_csv(output_file, index=False)
+            print(f"Cleaned file saved: {output_file}")
+        except Exception as e:
+            print(f"Error saving CSV file: {e}")
+        return None
+
+    # return the cleaned DataFrame if the input was a DataFrame
     return df_copy
