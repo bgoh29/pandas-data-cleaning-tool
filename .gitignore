@@ -10,6 +10,7 @@ __pycache__/
 
 # Testing
 .pytest_cache/
+*.csv
 
 # macOS
 .DS_Store
