@@ -1,22 +1,29 @@
 # Pandas Data Cleaning Tool
 
-## Project Overview
+A simple Python data-cleaning tool built with Pandas to handle common data-quality issues in tabular datasets.
 
-Raw data is rarely perfect. Before using it for data analysis or machine learning, it is often necessary to perform data preprocessing and cleaning.
+The tool can process either a pandas DataFrame or a CSV file directly, helping to automate common cleaning tasks such as handling missing values, converting negative numbers, and removing duplicate records.
 
-This project provides a simple Python tool to assist with common data-cleaning tasks, including handling missing values, converting negative numbers to positive values, identifying empty columns, and removing duplicate rows.
+## Features
 
-The tool is developed using Python and pandas as a practical exercise in data preprocessing and data quality management.
+- Accepts pandas DataFrames or CSV file paths.
+- Handles missing numeric values using six different methods.
+- Replaces missing text values with a user-defined value.
+- Converts negative numeric values to positive (absolute) values, when enabled.
+- Identifies columns containing no data.
+- Removes duplicate rows, when enabled.
+- Provides a summary of the cleaning process.
+- Preserves the original DataFrame or CSV file.
+- Saves cleaned CSV files as a separate output file.
 
 ## Requirements
 
-1. Python 3 installed.
-2. Python packages: `pandas` and `pytest`.
-3. Input data must be provided as a pandas DataFrame.
+- Python 3.10 or later
+- pandas
 
 ## Installation
 
-Clone this repository:
+Clone the repository from GitHub:
 
 ```bash
 git clone https://github.com/bgoh29/pandas-data-cleaning-tool.git
@@ -28,27 +35,28 @@ Navigate to the project directory:
 cd pandas-data-cleaning-tool
 ```
 
-Install the required packages:
+Install the required dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-## Features
+## Usage – DataFrame Input
 
-The tool provides the following data-cleaning capabilities:
+The cleaning tool can be imported and used directly in a Python script or Jupyter Notebook.
 
-1. **Replace missing numeric values** – Supports six different methods: interpolation, mode (most frequently occurring value), mean, median, next valid value, and previous valid value.
-2. **Replace missing text values** – Replaces missing text values with a generic value specified by the user.
-3. **Convert negative numbers to positive values** – Converts negative numeric values to their absolute values.
-4. **Identify empty columns** – Reports columns that contain no values.
-5. **Remove duplicate rows** – Identifies and removes duplicate rows, retaining the first occurrence.
+```python
+import pandas as pd
+from clean_data import clean_data
 
-The function also displays a summary of the cleaning operations performed, including the number of numeric and text cells updated, duplicate rows removed, and columns identified as empty or changed.
+df = pd.read_csv("customer_data.csv")
 
-## Usage
+cleaned_df = clean_data(df)
+```
 
-The function is called using the following parameters:
+The function returns a cleaned copy of the DataFrame. The original DataFrame remains unchanged.
+
+### Function Parameters
 
 ```python
 clean_data(
@@ -56,115 +64,203 @@ clean_data(
     filling_missing_numbers=True,
     convert_negatives=False,
     fill_missing_text=True,
-    replace_text='TBD',
+    replace_text="TBD",
     remove_duplicates=True,
     option=3
 )
 ```
 
-### Function Parameters
-
 | Parameter | Description | Default |
 |---|---|---|
-| `df` | The pandas DataFrame to be cleaned. | Required |
-| `filling_missing_numbers` | Enables or disables replacement of missing numeric values. | `True` |
-| `convert_negatives` | Converts negative numeric values to absolute values. | `False` |
-| `fill_missing_text` | Enables or disables replacement of missing text values. | `True` |
-| `replace_text` | The replacement value for missing text. Can be customised by the user. | `'TBD'` |
-| `remove_duplicates` | Enables or disables removal of duplicate rows. | `True` |
-| `option` | Selects the method used to replace missing numeric values. | `3` |
+| `df` | DataFrame or CSV file path to be cleaned | Required |
+| `filling_missing_numbers` | Enables handling of missing numeric values | `True` |
+| `convert_negatives` | Converts negative numeric values to absolute values | `False` |
+| `fill_missing_text` | Enables replacement of missing text values | `True` |
+| `replace_text` | Value used to replace missing text | `"TBD"` |
+| `remove_duplicates` | Enables removal of duplicate rows | `True` |
+| `option` | Method used to handle missing numeric values | `3` (Mean) |
 
-### Numeric Replacement Options
+### Missing Numeric Value Options
 
 The `option` parameter determines how missing numeric values are handled.
 
 | Option | Method | Description |
 |---|---|---|
-| 1 | Interpolation | Estimates missing values based on surrounding values. |
-| 2 | Mode | Replaces missing values with the most frequently occurring value. |
-| 3 | Mean | Replaces missing values with the column average. |
-| 4 | Median | Replaces missing values with the middle value. |
-| 5 | Next valid value | Uses the next available value to fill missing values, then fills remaining gaps using the previous available value. |
-| 6 | Previous valid value | Uses the previous available value to fill missing values, then fills remaining gaps using the next available value. |
+| `1` | Interpolation | Estimates missing values using interpolation |
+| `2` | Mode | Replaces missing values with the most frequently occurring value |
+| `3` | Mean | Replaces missing values with the average |
+| `4` | Median | Replaces missing values with the median |
+| `5` | Forward fill | Uses the previous valid value |
+| `6` | Backward fill | Uses the next valid value |
 
-**Note:** Options 5 and 6 use pandas' backward-fill and forward-fill operations. The result depends on the order of rows in the DataFrame.
-
-## Example
+### Example – Selecting a Cleaning Method
 
 ```python
-import pandas as pd
-from clean_data import clean_data
-
-data = {
-    'Age': [25, 30, None, 40, 45],
-    'Salary': [5000, None, 6000, 7000, 8000],
-    'Department': ['IT', 'HR', None, 'IT', 'HR'],
-    'Score': [10, 20, -5, 30, 40]
-}
-
-df = pd.DataFrame(data)
-
-# Clean the DataFrame using interpolation
-cleaned_df = clean_data(
-    df,
-    option=1,
-    convert_negatives=True
-)
-
-print(cleaned_df)
+cleaned_df = clean_data(df, option=4)
 ```
 
-## Testing
+This example uses the median to replace missing numeric values.
 
-The project uses `pytest` for automated testing.
+### Converting Negative Values
 
-To run the tests from the project root directory:
+Negative numeric values can optionally be converted to their absolute values.
+
+```python
+cleaned_df = clean_data(df, convert_negatives=True)
+```
+
+For example, `-25` will be converted to `25`.
+
+**Note:** This operation should only be used when negative values are not meaningful in the dataset.
+
+### Custom Missing Text Replacement
+
+Missing text values can be replaced with a custom value.
+
+```python
+cleaned_df = clean_data(df, replace_text="Unknown")
+```
+
+This example replaces missing text values with `"Unknown"` instead of the default `"TBD"`.
+
+### Disabling Cleaning Options
+
+Individual cleaning operations can be disabled when required.
+
+```python
+cleaned_df = clean_data(
+    df,
+    filling_missing_numbers=False,
+    fill_missing_text=False,
+    convert_negatives=False,
+    remove_duplicates=False
+)
+```
+
+## Usage – CSV File Input
+
+The tool can also accept a CSV file directly without requiring the user to load the file into a DataFrame first.
+
+When a CSV file is supplied, the tool will:
+
+1. Read the CSV file.
+2. Apply the selected data-cleaning operations.
+3. Save the cleaned data as a new CSV file.
+4. Preserve the original input file.
+
+### Output Filename
+
+The cleaned file is generated by appending `_cleaned` to the original filename.
+
+| Input file | Output file |
+|---|---|
+| `customer_data.csv` | `customer_data_cleaned.csv` |
+| `sales_report.csv` | `sales_report_cleaned.csv` |
+| `employees.csv` | `employees_cleaned.csv` |
+
+The output file is saved in the same directory as the original CSV file.
+
+## Running from the Command Line
+
+You can use the tool to clean a CSV file directly from the command line without writing a Python script.
+
+### Step 1 – Install the project
+
+Follow the Installation instructions above to download the repository and install the required dependencies.
+
+### Step 2 – Locate your CSV file
+
+Place the CSV file you want to clean inside the project folder, or use the full path to the file.
+
+### Step 3 – Run the cleaning tool
+
+Open Terminal (macOS/Linux) or Command Prompt/PowerShell (Windows), navigate to the project folder, and run:
+
+```bash
+python -c "from clean_data import clean_data; clean_data('customer_data.csv')"
+```
+
+Replace `customer_data.csv` with your own CSV filename.
+
+The tool will run using the default cleaning options.
+
+### Step 4 – Retrieve the cleaned file
+
+After processing, look for the new file in the same folder as your original CSV.
+
+For example:
+
+- Original: `customer_data.csv`
+- Cleaned output: `customer_data_cleaned.csv`
+
+You can open the cleaned file using Microsoft Excel, LibreOffice Calc, or another application that supports CSV files.
+
+The original file remains untouched.
+
+### Using a CSV File Located Elsewhere
+
+You can also supply the full file path instead of placing the CSV inside the project folder.
+
+Example:
+
+```bash
+python -c "from clean_data import clean_data; clean_data('/Users/yourname/Documents/customer_data.csv')"
+```
+
+The cleaned file will be saved alongside the original CSV file.
+
+## Error Handling
+
+The tool handles common file-input issues, including:
+
+- File not found.
+- Invalid file extension.
+- Permission errors.
+- Empty CSV files.
+- CSV parsing errors.
+- File decoding errors.
+
+When a file cannot be processed, the tool displays an error message.
+
+## Automated Testing
+
+The project uses `pytest` to run automated tests.
+
+To run the complete test suite from the project root directory:
 
 ```bash
 python -m pytest -v
 ```
 
-**Test coverage (18 tests):**
+### Test Coverage
 
-### Data integrity
-- Original DataFrame numeric values remain unchanged.
-- Original DataFrame text values remain unchanged.
+Automated tests cover the following areas:
 
-### Numeric data cleaning
-- Missing numeric values are replaced with the mean.
-- Negative numbers are converted to positive values when enabled.
-- Negative-number conversion remains disabled when the option is turned off.
-- Missing numeric values are replaced using interpolation.
-- Missing numeric values are replaced using the mode (most frequently occurring value).
-- Missing numeric values are replaced using the median.
-- Missing numeric values are replaced using the next valid value.
-- Missing numeric values are replaced using the previous valid value.
+**DataFrame cleaning**
 
-### Text data cleaning
-- Missing text values are replaced with the specified replacement value.
-- Missing text values are replaced with the specified replacement value disabled. 
+- Handling missing numeric values using the supported replacement methods.
+- Replacing missing text values.
+- Converting negative values to absolute values.
+- Removing duplicate rows.
+- Identifying empty columns.
+- Ensuring the original DataFrame remains unchanged.
+- Handling DataFrames where no cleaning is required.
+- Handling invalid cleaning options.
 
-### Duplicate handling
-- Duplicate rows are removed when enabled.
-- Duplicate rows are retained when removal is disabled.
-- Duplicate rows created after replacing missing values are also removed.
+**CSV file processing**
 
-### Empty columns and validation
-- Columns containing only missing values remain unchanged.
-- Invalid numeric replacement options are handled.
-- Options below the supported range are handled.
+- Verifying the generated output filename.
+- Ensuring the original CSV file remains unchanged.
+- Verifying the cleaned output contains the expected data.
+- Handling invalid file extensions.
+- Handling missing input files.
+- Handling CSV parsing errors.
+- Handling empty CSV files.
 
-**Latest test result: 18 passed.**
-
-## Important Notes
-
-- The function creates a copy of the input DataFrame. The original DataFrame remains unchanged.
-- Missing numeric values are processed only in numeric columns.
-- Missing text values are processed in object and string columns.
-- Columns containing only missing values are reported but are not automatically populated.
-- Negative-value conversion applies to all numeric columns when enabled. Use this option carefully, as negative values may be meaningful in some datasets.
-- If an invalid numeric replacement option is supplied, the function displays an error message and returns `None`.
+Tests use temporary files and directories where appropriate to avoid modifying actual input files or leaving test output behind.
 
 ## Project Status
 
-This is an ongoing learning project. Further improvements may include more detailed cleaning reports, configurable cleaning methods for individual columns, and additional data-validation capabilities.
+This project is a practical Python/Pandas learning project focused on data cleaning, automation, and software testing.
+
+It is intended as a simple utility and learning exercise rather than a replacement for comprehensive data-validation or ETL frameworks.
